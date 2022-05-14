@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+go mod tidy
+golines --base-formatter goimports -w -m 120 .
+golint .
+go vet .
+golangci-lint run
