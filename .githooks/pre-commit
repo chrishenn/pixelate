@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# jetbrains workaround to disable hook while attempting a GUI squash
+parent_pid=$PPID
+grandparent_pid=$(ps -o ppid= -p $parent_pid)
+if ps -o cmd= -p "$grandparent_pid" | grep -qe "--amend"; then
+    exit
+fi
+
 go mod tidy
 golines --base-formatter goimports -w -m 120 .
 golint .
