@@ -10,8 +10,13 @@ Simply demonstrates the flexibility and (some) semantics of a go channel.
 
 Only linux-amd64 is supported
 
-Download the latest binary release from [releases](https://github.com/chrishenn/pixelate/releases/latest)
+You can download the latest binary [release](https://github.com/chrishenn/pixelate/releases/latest) via the 
+github UI, or:
+```bash
+curl -LO https://github.com/chrishenn/pixelate/releases/download/v0.0.1/pixelate
+```
 
+usage:
 ```bash
 sudo chmod ug+x pixelate
 
