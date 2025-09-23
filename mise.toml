@@ -2,3 +2,6 @@
 go = "latest"
 golangci-lint = "latest"
 just = "latest"
+
+[env]
+go_set_goroot = "1"

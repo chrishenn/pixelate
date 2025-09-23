@@ -75,7 +75,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.done = true
 			return m, tea.Sequence(tea.Quit)
 		}
-		return m, tea.Batch(
+		return m, tea.Sequence(
 			m.progress.SetPercent(float64(m.nDone)/float64(m.nTodo)),
 			tea.Printf("%s %s", checkMark, nameStyle.Render(msg.msg)),
 			m.readProgress,

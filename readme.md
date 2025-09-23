@@ -1,5 +1,7 @@
 # Pixelate
 
+![pixelate](./doc/pixelate.gif)
+
 A simple Go project to pixelate images. 
 
 This is a very simple demo program to better understand concurrent producers/consumers using go-channels and go-funcs.  
