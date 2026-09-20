@@ -68,5 +68,4 @@ func BenchmarkPixelate(t *testing.B) {
 	}
 	opt.avtime = float64(tsum) / float64(opt.nloop)
 	fmt.Printf("%#v\n", opt)
-
 }

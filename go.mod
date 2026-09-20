@@ -1,13 +1,11 @@
 module github.com/chrishenn/pixelate
 
-go 1.24.3
-
 require (
 	github.com/charmbracelet/bubbles v0.21.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/sebdah/goldie/v2 v2.5.5
-	golang.org/x/image v0.31.0
+	golang.org/x/image v0.46.0
 )
 
 require (
@@ -29,6 +27,8 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/sergi/go-diff v1.4.0 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
-	golang.org/x/sys v0.36.0 // indirect
-	golang.org/x/text v0.29.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
+	golang.org/x/text v0.42.0 // indirect
 )
+
+go 1.26.0
