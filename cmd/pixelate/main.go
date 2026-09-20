@@ -63,7 +63,6 @@ type imgt struct {
 }
 
 func getpaths(imgDir *string, pattern *string) chan string {
-
 	imgPath, err := filepath.Abs(*imgDir)
 	if err != nil {
 		log.Fatalln(err)
@@ -87,9 +86,12 @@ func getpaths(imgDir *string, pattern *string) chan string {
 }
 
 func read(paths chan string, decoded chan *imgt, wg *sync.WaitGroup) {
+	//root, err := os.OpenRoot("/")
+	//if err != nil {
+	//	log.Fatalln(err)
+	//}
 
 	for pth := range paths {
-
 		file, err := os.Open(pth)
 		if err != nil {
 			log.Fatalln(err)
@@ -114,7 +116,6 @@ func read(paths chan string, decoded chan *imgt, wg *sync.WaitGroup) {
 }
 
 func chunk(decoded chan *imgt, chunked chan *imgt, chunkSize int, killSig chan int, wg *sync.WaitGroup) {
-
 	for {
 		select {
 		case img := <-decoded:
@@ -132,7 +133,7 @@ func chunk(decoded chan *imgt, chunked chan *imgt, chunkSize int, killSig chan i
 				chunkSize: chunkSize,
 			}
 
-			for chunkI := 0; chunkI < nChunks; chunkI++ {
+			for chunkI := range nChunks {
 
 				startY := (chunkI / nBlocksX) * chunkSize
 				startX := (chunkI % nBlocksX) * chunkSize
@@ -173,7 +174,6 @@ func chunk(decoded chan *imgt, chunked chan *imgt, chunkSize int, killSig chan i
 }
 
 func assemble(chunked chan *imgt, assembled chan *imgt, killSig chan int, wg *sync.WaitGroup) {
-
 	for {
 		select {
 		case img := <-chunked:
@@ -201,6 +201,11 @@ func assemble(chunked chan *imgt, assembled chan *imgt, killSig chan int, wg *sy
 }
 
 func write(assembled chan *imgt, dstDir string, done chan *string, killSig chan int, wg *sync.WaitGroup) {
+	//root, err := os.OpenRoot("/")
+	//if err != nil {
+	//	log.Fatalln(err)
+	//}
+
 	for {
 		select {
 		case img := <-assembled:
@@ -231,7 +236,6 @@ func write(assembled chan *imgt, dstDir string, done chan *string, killSig chan 
 }
 
 func pixelate(opt *pixelateOpt) int {
-
 	paths := getpaths(opt.srcDir, opt.filter)
 	close(paths)
 	nImgs := len(paths)
@@ -243,7 +247,7 @@ func pixelate(opt *pixelateOpt) int {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	if err := os.MkdirAll(dstAbs, 0750); err != nil {
+	if err := os.MkdirAll(dstAbs, 0o750); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -272,11 +276,11 @@ func pixelate(opt *pixelateOpt) int {
 
 	switch *opt.iomode {
 	case ioSilent:
-		for i := 0; i < nImgs; i++ {
+		for range nImgs {
 			<-done
 		}
 	case ioBasic:
-		for i := 0; i < nImgs; i++ {
+		for range nImgs {
 			log.Println(*<-done)
 		}
 	case ioFancy:
@@ -288,7 +292,7 @@ func pixelate(opt *pixelateOpt) int {
 		log.Fatalf("iomode must have value in {SILENT, BASIC, FANCY}; got: %s\n", *opt.iomode)
 	}
 
-	for i := 0; i < nWorker; i++ {
+	for range nWorker {
 		killSig <- 1
 	}
 	wg.Wait()

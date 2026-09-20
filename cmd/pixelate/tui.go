@@ -10,9 +10,11 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var nameStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
-var doneStyle = lipgloss.NewStyle().Margin(1, 2).Foreground(lipgloss.Color("201"))
-var checkMark = lipgloss.NewStyle().Foreground(lipgloss.Color("42")).SetString("✓")
+var (
+	nameStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
+	doneStyle = lipgloss.NewStyle().Margin(1, 2).Foreground(lipgloss.Color("201"))
+	checkMark = lipgloss.NewStyle().Foreground(lipgloss.Color("42")).SetString("✓")
+)
 
 type model struct {
 	doneq chan *string

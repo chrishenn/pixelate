@@ -1,7 +1,53 @@
 [tools]
-go = "latest"
+"aqua:securego/gosec" = "latest"
+go = "1.26"
+"go:golang.org/x/lint/golint" = "latest"
+"go:golang.org/x/tools/cmd/goimports" = "latest"
+gofumpt = "latest"
 golangci-lint = "latest"
+hk = "latest"
+jactionlint = "latest"
 just = "latest"
+pinact = "latest"
+pkl = "latest"
+zizmor = "latest"
 
 [env]
+REPO = "{{ config_root | absolute }}"
 go_set_goroot = "1"
+
+[tasks.release]
+description = "force-tag and push a version release"
+alias = "rel"
+run = '''
+ver="$(cat ./version)"
+git add -A
+git commit -am "Automated release of: v$ver" || true
+git push
+git tag -a "v$ver" -m "Automated release of: v$ver" -f
+git push --tags -f
+'''
+
+[tasks.release_local]
+run = '''
+ver="$(cat ./version)"
+git add -A
+git commit -am "Automated release of: v$ver" || true
+git push
+git tag -a "v$ver" -m "Automated release of: v$ver" -f
+git push --tags -f
+# todo: set the push action's github.ref_name to release version/tag when running with jactionlint? override GREF?
+git checkout "v$ver" -q
+# todo: jactionlint or possibly mise issue; cache issue, or sandbox issue; does not clear output dir with eaccess/permission denied
+jactionlint run --secret GITHUB_TOKEN=$GITHUB_TOKEN
+git switch - -q
+'''
+
+[tasks.build]
+run = 'go build ./cmd/pixelate'
+
+[tasks.test]
+run = 'go test -count=1 -v ./cmd/...'
+
+[tasks.bench]
+run = 'go test -bench BenchmarkPixelate -run ^$ -count 1'

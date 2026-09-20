@@ -14,7 +14,7 @@ import (
 )
 
 func TestGoldens(t *testing.T) {
-
+	//testdata := os.Getenv("REPO") + "/test/testdata"
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalln(err)
@@ -23,7 +23,6 @@ func TestGoldens(t *testing.T) {
 	dstDir := "./out"
 
 	for chunkSize := 10; chunkSize < 60; chunkSize += 10 {
-
 		tests := map[string]struct {
 			input  string
 			golden string
@@ -40,7 +39,6 @@ func TestGoldens(t *testing.T) {
 
 		for name, tc := range tests {
 			t.Run(name, func(t *testing.T) {
-
 				g := goldie.New(t)
 
 				outn := "pixelated_" + strconv.Itoa(chunkSize) + "_" + filepath.Base(tc.input)
@@ -74,7 +72,6 @@ func TestGoldens(t *testing.T) {
 	if err := os.RemoveAll(dstDir); err != nil {
 		log.Fatalf("failed to remove tmp test img output dir: %s\n", err)
 	}
-
 }
 
 func verifyImgPaths(paths chan string, wg *sync.WaitGroup) {
@@ -97,6 +94,7 @@ func verifyImgPaths(paths chan string, wg *sync.WaitGroup) {
 
 func TestEncodingErrors(t *testing.T) {
 	// would benefit from a larger set of images to coax out concurrency bugs.
+	// srcDir := os.Getenv("REPO") + "/test/testdata"
 	srcDir := "./testdata"
 	dstDir := "./out"
 	filter := "*.png"
@@ -134,5 +132,4 @@ func TestEncodingErrors(t *testing.T) {
 	if err := os.RemoveAll(dstDir); err != nil {
 		log.Fatalf("failed to remove tmp test img output dir: %s\n", err)
 	}
-
 }

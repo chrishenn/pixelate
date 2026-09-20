@@ -1,27 +1,26 @@
 # Pixelate
 
-![pixelate](./doc/pixelate.gif)
+![pixelate](./docs/pixelate.gif)
 
-A simple Go project to pixelate images. 
+A simple Go project to pixelate images.
 
-This is a very simple demo program to better understand concurrent producers/consumers using go-channels and go-funcs.  
-Simply demonstrates the flexibility and (some) semantics of a go channel.
+Explores the flexibility and semantics of a go channel.
 
-
-# Usage 
+## usage
 
 Only linux-amd64 is supported
 
-You can download the latest binary [release](https://github.com/chrishenn/pixelate/releases/latest) via the 
-github UI, or:
+You can download the latest binary [release](https://github.com/chrishenn/pixelate/releases/latest) via the
+github api or UI, or:
+
 ```bash
 curl -LO https://github.com/chrishenn/pixelate/releases/download/v0.0.1/pixelate
+sudo chmod ug+x pixelate
 ```
 
 usage:
-```bash
-sudo chmod ug+x pixelate
 
+```bash
 ./pixelate help
 
 # Usage of ./pixelate:
@@ -48,14 +47,12 @@ sudo chmod ug+x pixelate
 ./pixelate -i testdata -o out -filter '*.png'
 ```
 
-
-# Features
+## features
 
 - Read and pixelate most (input) image types
 - Highly concurrent
 
-
-# Not Supported
+## not supported
 
 - Writing to image formats other than png
 - OS's other than linux-amd64
@@ -70,61 +67,68 @@ sudo chmod ug+x pixelate
 
 ---
 
+## dev
 
-# Build
-
-Set up a build env
-- [install mise](https://mise.jdx.dev/getting-started.html)
-- activate mise in the current shell
-- `just boot-env`
-
-Build and run
 ```bash
-go get .
-go build
-go test
-just bench
-./pixelate help
+curl https://mise.run | sh
+eval "$(~/.local/bin/mise activate bash)"
+mise i
+go mod tidy
+mise build
+
+# or,
+go build ./cmd/pixelate
 ```
 
-
-# Project Tooling
-
-I've used [mise](https://mise.jdx.dev) to expose these project tools to the active shell:
+I've used [mise](https://mise.jdx.dev) to manage these project tools:
 ```bash
-go@latest
-golangci-lint@latest
-just@latest
+mise ls -lc
+# actionlint                           1.7.12                             ~/Projects/pixelate/mise.toml  latest
+# aqua:securego/gosec                  2.29.0                             ~/Projects/pixelate/mise.toml  latest
+# go                                   1.26.8                             ~/Projects/pixelate/mise.toml  1.26
+# go:golang.org/x/lint/golint          0.0.0-20241112194109-818c5a804067  ~/Projects/pixelate/mise.toml  latest
+# go:golang.org/x/tools/cmd/goimports  0.50.0                             ~/Projects/pixelate/mise.toml  latest
+# gofumpt                              0.12.0                             ~/Projects/pixelate/mise.toml  latest
+# golangci-lint                        2.13.2                             ~/Projects/pixelate/mise.toml  latest
+# hk                                   2.0.1                              ~/Projects/pixelate/mise.toml  latest
+# just                                 1.58.0                             ~/Projects/pixelate/mise.toml  latest
+# pinact                               5.0.0                              ~/Projects/pixelate/mise.toml  latest
+# pkl                                  0.32.1                             ~/Projects/pixelate/mise.toml  latest
+# zizmor                               1.30.1                             ~/Projects/pixelate/mise.toml  latest
 ```
 
-See justfile for runnable recipes
+see mise tasks for project tasks
+
+```bash
+mise tasks ls
+# Name     Description
+# bench
+# build
+# check    run project linters declared in hk.pkl in 'check' mode
+# fix      run project formatters declared in hk.pkl in 'fix' mode
+# release  force-tag and push a version release
+# sync     git: sync local changes to remote
+# test
+```
+
+See justfile for legacy recipes
+
 ```bash
 just --dump
-
 # boot-env:
-#    go install golang.org/x/tools/cmd/goimports@latest
-#    go install golang.org/x/lint/golint@latest
-#    go install github.com/segmentio/golines@latest
-#    go mod download
+#     mise i
+#     go mod tidy
 #
-#    sudo chmod -R ug+x .githooks
-#    git config core.hooksPath .githooks
+#     sudo chmod -R ug+x .githooks
+#     git config core.hooksPath githooks
 #
 # lint:
-#    git hook run pre-commit
-#    just --fmt --unstable
-#
-# test:
-#    go build
-#    go test
-#
-# bench:
-#    go build
-#    go test -bench BenchmarkPixelate -run ^$ -count 1
+#     git hook run pre-commit
+#     just --fmt --unstable
 ```
 Note that the "bench" recipe will look for a folder full of images at "./benchdata". See "Benchmarks" below.
 
-The pre-commit hook, also included in `just lint`, runs various linting steps:
+The pre-commit hook, also included in `just lint`, runs legacy linting steps:
 ```bash
 git hook run pre-commit
 # go mod tidy
@@ -134,22 +138,18 @@ git hook run pre-commit
 # golangci-lint run
 ```
 
+## benchmarks
 
-# Benchmarks
+Although the structure of this program is purposefully contrived, it is nonetheless delightful to see
+performance scaling with go-func numbers on various subtasks - reducing bottlenecks to disk, compute, and stdout.
 
-Although the structure of this program is purposefully contrived, it is nonetheless surprising and delightful to see 
-performance scaling with go-func numbers on various subtasks. Crucially, I've nearly 0 understanding of the 
-characteristics of the go runtime, and a surface-level understanding of the language. Yet the simplicity of go 
-semantics, coupled with its excellent tooling, make for near-trivial concurrency and "good enough" performance for 
-"real" work. Delightful.   
-
-The facenet image dataset (circa 2015) that I had handy includes 7864 jpg images of roughly 160x200 pixels. I would 
+The facenet image dataset (circa 2015) that I had handy includes 7864 jpg images of roughly 160x200 pixels. I would
 have included a script to download it, but I couldn't find it online. Any folder full of images will do.
 
-There's a ~25% penalty for using "fancy" print (https://github.com/charmbracelet/bubbletea) while processing this 
+There's a ~25% penalty for using "fancy" print (https://github.com/charmbracelet/bubbletea) while processing this
 dataset - it formats and prints each output image filename, and attempts (and mostly fails) to display a progress bar.
 
-The "avtime" field holds the average number of milliseconds per pixelate call over "nloop" calls. Filesystem 
+The "avtime" field holds the average number of milliseconds per pixelate call over "nloop" calls. Filesystem
 operations are included in the timing. Stddev for timings are not included.
 
 All run with chunkSize=10, nloop=10.
@@ -160,27 +160,26 @@ goarch: amd64
 pkg: github.com/chrishenn/pixelate
 cpu: AMD Ryzen 9 9950X 16-Core Processor
 
-varying processing, assembling numbers of gofuncs 
+varying processing, assembling numbers of gofuncs
 {read:24, write:24, chunk:1,   assemble:1,   imgbuff:8000, avtime:5782.2}
 {read:24, write:24, chunk:4,   assemble:4,   imgbuff:8000, avtime:1796.7}
 {read:24, write:24, chunk:32,  assemble:32,  imgbuff:8000, avtime:1067.5}
 {read:24, write:24, chunk:156, assemble:156, imgbuff:8000, avtime:1078.8}
 
-varying readers/writers numbers of gofuncs 
+varying readers/writers numbers of gofuncs
 {read:1,  write:1,  chunk:156, assemble:156, imgbuff:8000, avtime:3969.1}
 {read:4,  write:4,  chunk:156, assemble:156, imgbuff:8000, avtime:1497.7}
 {read:8,  write:8,  chunk:156, assemble:156, imgbuff:8000, avtime:1230.4}
 {read:24, write:24, chunk:156, assemble:156, imgbuff:8000, avtime:1078.8}
 
-varying the size of channels queueing active image pointers 
+varying the size of channels queueing active image pointers
 {read:24, write:24, chunk:156, assemble:156, imgbuff:1,    avtime:1254.9}
 {read:24, write:24, chunk:156, assemble:156, imgbuff:32,   avtime:1198.2}
 {read:24, write:24, chunk:156, assemble:156, imgbuff:4096, avtime:1092.5}
 {read:24, write:24, chunk:156, assemble:156, imgbuff:8000, avtime:1078.8}
 
-varying the progress print mode 
+varying the progress print mode
 {read:24, write:24, chunk:156, assemble:156, imgbuff:8000, iomode:"silent", avtime:1070.2}
 {read:24, write:24, chunk:156, assemble:156, imgbuff:8000, iomode:"basic",  avtime:1081.6}
 {read:24, write:24, chunk:156, assemble:156, imgbuff:8000, iomode:"fancy",  avtime:1345.6}
 ```
-
