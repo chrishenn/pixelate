@@ -6,7 +6,6 @@ A simple Go project to pixelate images.
 
 Explores the flexibility and semantics of a go channel.
 
-
 ## usage
 
 Only linux-amd64 is supported
@@ -48,12 +47,10 @@ usage:
 ./pixelate -i testdata -o out -filter '*.png'
 ```
 
-
 ## features
 
 - Read and pixelate most (input) image types
 - Highly concurrent
-
 
 ## not supported
 
@@ -70,9 +67,7 @@ usage:
 
 ---
 
-
 ## dev
-
 
 ```bash
 curl https://mise.run | sh
@@ -109,10 +104,10 @@ mise tasks ls
 # Name     Description
 # bench
 # build
-# check
-# fix
+# check    run project linters declared in hk.pkl in 'check' mode
+# fix      run project formatters declared in hk.pkl in 'fix' mode
 # release  force-tag and push a version release
-# sync
+# sync     git: sync local changes to remote
 # test
 ```
 
@@ -120,22 +115,16 @@ See justfile for legacy recipes
 
 ```bash
 just --dump
-
 # boot-env:
-#    sudo chmod -R ug+x .githooks
-#    git config core.hooksPath .githooks
-#
+#     mise i
+#     go mod tidy
+# 
+#     sudo chmod -R ug+x .githooks
+#     git config core.hooksPath githooks
+# 
 # lint:
-#    git hook run pre-commit
-#    just --fmt --unstable
-#
-# test:
-#    go build
-#    go test
-#
-# bench:
-#    go build
-#    go test -bench BenchmarkPixelate -run ^$ -count 1
+#     git hook run pre-commit
+#     just --fmt --unstable
 ```
 Note that the "bench" recipe will look for a folder full of images at "./benchdata". See "Benchmarks" below.
 
@@ -149,14 +138,10 @@ git hook run pre-commit
 # golangci-lint run
 ```
 
+## benchmarks
 
-# Benchmarks
-
-Although the structure of this program is purposefully contrived, it is nonetheless surprising and delightful to see
-performance scaling with go-func numbers on various subtasks. Crucially, I've nearly 0 understanding of the
-characteristics of the go runtime, and a surface-level understanding of the language. Yet the simplicity of go
-semantics, coupled with its excellent tooling, make for near-trivial concurrency and "good enough" performance for
-"real" work. Delightful.
+Although the structure of this program is purposefully contrived, it is nonetheless delightful to see
+performance scaling with go-func numbers on various subtasks - reducing bottlenecks to disk, compute, and stdout.
 
 The facenet image dataset (circa 2015) that I had handy includes 7864 jpg images of roughly 160x200 pixels. I would
 have included a script to download it, but I couldn't find it online. Any folder full of images will do.

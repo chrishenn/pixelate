@@ -28,7 +28,7 @@ steps {
   ["go_fmt"] = Builtins.go_fmt
   ["go_fumpt"] = Builtins.go_fumpt
   ["go_imports"] = Builtins.go_imports
-//   ["go_sec"] = Builtins.go_sec
+  //   ["go_sec"] = Builtins.go_sec
   ["go_vet"] = Builtins.go_vet
   ["golangci_lint"] = Builtins.golangci_lint
   ["golangci_lint_fmt"] = Builtins.golangci_lint_fmt
