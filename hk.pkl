@@ -1,6 +1,6 @@
-amends "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.14.0/hk@2.14.0#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.14.0/hk@2.14.0#/Builtins.pkl"
 
 steps {
   ["pkl"] = Builtins.pkl
@@ -10,7 +10,8 @@ steps {
 
   ["pinact_update"] = Builtins.pinact_update
   ["pinact"] = Builtins.pinact
-  ["actionlint"] = Builtins.actionlint
+  //   ["actionlint"] = Builtins.actionlint
+  ["actionlint"] = Builtins.jactionlint
   ["zizmor"] = (Builtins.zizmor) {
     fix = "zizmor --no-progress --fix=all {{files}}"
     output_summary = "hide"

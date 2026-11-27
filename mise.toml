@@ -7,6 +7,7 @@ go = "1.26"
 gofumpt = "latest"
 golangci-lint = "latest"
 hk = "latest"
+jactionlint = "latest"
 just = "latest"
 pinact = "latest"
 pkl = "latest"
@@ -15,16 +16,6 @@ zizmor = "latest"
 [env]
 REPO = "{{ config_root | absolute }}"
 go_set_goroot = "1"
-
-[tasks.fix]
-alias = "f"
-description = "run project formatters declared in hk.pkl in 'fix' mode"
-run = "hk fix --all"
-
-[tasks.check]
-alias = "c"
-description = "run project linters declared in hk.pkl in 'check' mode"
-run = "hk check --all"
 
 [tasks.release]
 description = "force-tag and push a version release"
@@ -45,7 +36,7 @@ usage = 'arg "<msg>" default="sync"'
 run = 'git add -A && git commit -am "{{usage.msg}}" && git pull && git push'
 
 [tasks.build]
-run = 'go build ./cmd/pixelate'
+run = 'go build -o pixelate .'
 
 [tasks.test]
 run = 'go test -count=1 -v ./cmd/...'
